@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         EventStore vector = new VectorEventStore();
         EventStore sync = new SynchronizedArrayListEventStore();
         EventStore manuallySync = new ManuallySynchronizedEventStore();
@@ -15,15 +15,14 @@ public class Main {
             performTest(vector);
             performTest(sync);
             performTest(manuallySync);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
     }
 
-    private static final String[] TYPES = new String[]{ "Int", "Long", "String", "Array", "Event"};
+    private static final String[] TYPES = new String[]{"Int", "Long", "String", "Array", "Event"};
     private static final int THREAD_POOL_SIZE = 5;
+
     private static void performTest(final EventStore store) throws InterruptedException {
 
         Random random = new Random();
@@ -42,8 +41,7 @@ public class Main {
                     public void run() {
 
                         for (int k = 0; k < 500000; k++) {
-                            int randomNumber = (int) Math.ceil(Math.random() * 550000);
-
+                            long randomNumber = (long) Math.ceil(Math.random() * 550000);
                             store.insert(new Event(TYPES[random.nextInt(4)], randomNumber));
                         }
                     }
@@ -52,19 +50,19 @@ public class Main {
 
             EventIterator iterator;
 
-            iterator = store.query(TYPES[0], 0, Long.MAX_VALUE);
+            iterator = store.query(TYPES[0], Long.MIN_VALUE, Long.MAX_VALUE);
             iterate(iterator);
 
-            iterator = store.query(TYPES[1], 0, Long.MAX_VALUE);
+            iterator = store.query(TYPES[1], Long.MIN_VALUE, Long.MAX_VALUE);
             iterate(iterator);
 
-            iterator = store.query(TYPES[2], 0, Long.MAX_VALUE);
+            iterator = store.query(TYPES[2], Long.MIN_VALUE, Long.MAX_VALUE);
             iterate(iterator);
 
-            iterator = store.query(TYPES[3], 0, Long.MAX_VALUE);
+            iterator = store.query(TYPES[3], Long.MIN_VALUE, Long.MAX_VALUE);
             iterate(iterator);
 
-            iterator = store.query(TYPES[4], 0, Long.MAX_VALUE);
+            iterator = store.query(TYPES[4], Long.MIN_VALUE, Long.MAX_VALUE);
             iterate(iterator);
 
             // Initiates an orderly shutdown in which previously submitted tasks are executed, but no new tasks will be accepted. Invocation
@@ -85,8 +83,8 @@ public class Main {
         System.out.println();
     }
 
-    private static void iterate(EventIterator iterator){
-        while (iterator.moveNext()){
+    private static void iterate(EventIterator iterator) {
+        while (iterator.moveNext()) {
             Event e = iterator.current();
             //System.out.println("Type: " + e.type() + "; Timestamp: " + e.timestamp());
         }

@@ -55,4 +55,26 @@ public class EventTest {
 
         Event e = new Event("", 123456L);
     }
+
+    /**
+     * Creates an Event with the timestamp as 0
+     */
+    @Test
+    public void CreateEvent_ZeroTimestamp_Invalid(){
+        emptyType.expect(IllegalArgumentException.class);
+        emptyType.expectMessage("Argument 'timestamp' cannot be smaller than 1.");
+
+        Event e = new Event("Doctor", 0L);
+    }
+
+    /**
+     * Creates an Event with the timestamp as less than 0
+     */
+    @Test
+    public void CreateEvent_LessThanZeroTimestamp_Invalid(){
+        emptyType.expect(IllegalArgumentException.class);
+        emptyType.expectMessage("Argument 'timestamp' cannot be smaller than 1.");
+
+        Event e = new Event("Doctor", -1L);
+    }
 }

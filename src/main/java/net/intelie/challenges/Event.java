@@ -11,6 +11,8 @@ public class Event {
         if (type == null) throw new IllegalArgumentException("Argument 'type' cannot be null.");
         if (type.equals("")) throw new IllegalArgumentException("Argument 'type' cannot be empty.");
 
+        if (timestamp < 1L) throw new IllegalArgumentException("Argument 'timestamp' cannot be smaller than 1.");
+
         this.type = type;
         this.timestamp = timestamp;
     }
