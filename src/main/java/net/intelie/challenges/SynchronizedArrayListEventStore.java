@@ -1,0 +1,30 @@
+package net.intelie.challenges;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class SynchronizedArrayListEventStore implements EventStore {
+
+    private List<Event> _events;
+
+    public SynchronizedArrayListEventStore()
+    {
+        _events = Collections.synchronizedList(new ArrayList<>(2000));
+    }
+
+    @Override
+    public void insert(Event event) {
+        _events.add(event);
+    }
+
+    @Override
+    public void removeAll(String type) {
+        _events.removeIf(e -> e.type().equals(type));
+    }
+
+    @Override
+    public EventIterator query(String type, long startTime, long endTime) {
+        return new EventStoreIterator(_events, type, startTime, endTime);
+    }
+}
