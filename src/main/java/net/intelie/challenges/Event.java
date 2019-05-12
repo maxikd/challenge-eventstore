@@ -9,6 +9,7 @@ public class Event {
 
     public Event(String type, long timestamp) throws IllegalArgumentException {
         if (type == null) throw new IllegalArgumentException("Argument 'type' cannot be null.");
+        if (type.equals("")) throw new IllegalArgumentException("Argument 'type' cannot be empty.");
 
         this.type = type;
         this.timestamp = timestamp;
