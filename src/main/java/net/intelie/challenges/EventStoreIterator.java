@@ -54,7 +54,7 @@ public class EventStoreIterator implements EventIterator {
     }
 
     @Override
-    public synchronized void remove() {
+    public synchronized void remove() throws IllegalStateException {
         if (currentIndex == -1)
             throw new IllegalStateException("moveNext() was never called.");
         if (!lastMoveNext)
