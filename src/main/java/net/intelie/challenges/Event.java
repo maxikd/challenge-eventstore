@@ -7,7 +7,9 @@ public class Event {
     private final String type;
     private final long timestamp;
 
-    public Event(String type, long timestamp) {
+    public Event(String type, long timestamp) throws IllegalArgumentException {
+        if (type == null) throw new IllegalArgumentException("Argument 'type' cannot be null.");
+
         this.type = type;
         this.timestamp = timestamp;
     }

@@ -7,12 +7,18 @@ public class EventStoreIterator implements EventIterator {
 
     private List<Event> _events;
     private List<Event> _filteredEvents;
-    private int currentIndex = -1;
-    private boolean lastMoveNext = false;
+    private int _currentIndex = -1;
+    private boolean _lastMoveNext = false;
 
-    EventStoreIterator(List<Event> events, String type, long startTime, long endTime) {
+    EventStoreIterator(List<Event> events, String type, long startTime, long endTime) throws IllegalArgumentException {
+        if (events == null) throw new IllegalArgumentException("Argument 'events' cannot be null.");
+        if (type == null) throw new IllegalArgumentException("Argument 'type' cannot be null.");
+
         _events = events;
-        _filteredEvents = filterEvents(events, type, startTime, endTime);
+
+        synchronized (events){
+            _filteredEvents = filterEvents(events, type, startTime, endTime);
+        }
     }
 
     private List<Event> filterEvents(List<Event> events, String type, long startTime, long endTime)
@@ -35,33 +41,31 @@ public class EventStoreIterator implements EventIterator {
 
     @Override
     public synchronized boolean moveNext() {
-        if (_filteredEvents.size() == currentIndex + 1) {
-            return lastMoveNext = false;
-        } else {
-            currentIndex++;
-            return lastMoveNext = true;
-        }
+        _lastMoveNext = _currentIndex < _filteredEvents.size() - 1;
+        _currentIndex++;
+
+        return _lastMoveNext;
     }
 
     @Override
     public Event current() throws IllegalStateException {
-        if (currentIndex == -1)
+        if (_currentIndex == -1)
             throw new IllegalStateException("moveNext() was never called.");
-        if (!lastMoveNext)
+        if (!_lastMoveNext)
             throw new IllegalStateException("moveNext() returned false on last call.");
 
-        return _filteredEvents.get(currentIndex);
+        return _filteredEvents.get(_currentIndex);
     }
 
     @Override
     public synchronized void remove() throws IllegalStateException {
-        if (currentIndex == -1)
+        if (_currentIndex == -1)
             throw new IllegalStateException("moveNext() was never called.");
-        if (!lastMoveNext)
+        if (!_lastMoveNext)
             throw new IllegalStateException("moveNext() returned false on last call.");
 
-        _events.remove(currentIndex);
-        _filteredEvents.remove(currentIndex);
+        _events.remove(_currentIndex);
+        _filteredEvents.remove(_currentIndex);
     }
 
     @Override
