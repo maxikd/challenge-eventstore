@@ -8,12 +8,14 @@ import java.util.concurrent.TimeUnit;
 public class Main {
     public static void main(String[] args) {
         EventStore vector = new VectorEventStore();
-        EventStore sync = new SynchronizedArrayListEventStore();
+        EventStore syncArray = new SynchronizedArrayListEventStore();
+        EventStore syncLinked = new SynchronizedLinkedListEventStore();
         EventStore manuallySync = new ManuallySynchronizedEventStore();
 
         try {
             performTest(vector);
-            performTest(sync);
+            performTest(syncArray);
+            performTest(syncLinked);
             performTest(manuallySync);
         } catch (Exception e) {
 
@@ -74,10 +76,10 @@ public class Main {
             // interrupted, whichever happens first.
             exServer.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 
-            long entTime = System.nanoTime();
-            long totalTime = (entTime - startTime) / 1000000L;
+            long endTime = System.nanoTime();
+            long totalTime = (endTime - startTime) / 1000000L;
             averageTime += totalTime;
-            System.out.println("500K entried added/retrieved in " + totalTime + " ms");
+            System.out.println("500K entries added/retrieved in " + totalTime + " ms");
         }
         System.out.println("For " + store.getClass() + " the average time is " + averageTime / 5 + " ms");
         System.out.println();

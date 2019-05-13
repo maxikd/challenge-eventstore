@@ -2,6 +2,11 @@ package net.intelie.challenges;
 
 import java.util.Vector;
 
+/*
+    Vector<> is a collection that is already implemented as thread-safe.
+    Although it isn't the best in performance, I chose it to implement my solution
+    because it is naturally synchronized and I can rely on it.
+ */
 public class VectorEventStore implements EventStore {
 
     private Vector<Event> _events;

@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/*
+    Collections.synchronizedList(collection) creates a synchronized scenario
+    for the wrapped collection. In my case, I used an ArrayList<> as the base collection
+    because of how it expands its size when needed.
+ */
 public class SynchronizedArrayListEventStore implements EventStore {
 
     private List<Event> _events;
